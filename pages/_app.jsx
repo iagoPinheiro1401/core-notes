@@ -8,6 +8,7 @@ const GlobalStyle = createGlobalStyle`
 
     body {
       font-family: 'Roboto', sans-serif;
+      background: #F0F2F5;
     }
 `
 
