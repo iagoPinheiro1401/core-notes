@@ -12,6 +12,11 @@ const StyleCard = styled.div`
     word-wrap: break-word;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 450px) {
+        width: 300px;
+        height: 360.588px;
+    }
 `
 
 const TitleContainer = styled.div`

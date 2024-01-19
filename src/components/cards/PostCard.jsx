@@ -8,6 +8,12 @@ const StyleCard = styled.div`
     border-radius: 3px;
     border: 1px solid #D9D9D9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    @media (max-width: 1100px) {
+        width: 340px;
+        border-radius: 25px;
+        border: 1px solid #D9D9D9;
+    }
 `
 
 const InputTitle = styled.input`
@@ -23,6 +29,11 @@ const InputTitle = styled.input`
         font-weight: bolder;
         color: black;
     }
+
+    @media (max-width: 1100px) {
+        border-radius: 25px 25px 0 0;
+        border: 1px solid #D9D9D9;
+    }
 `
 
 const PostTextarea = styled.textarea`
@@ -31,6 +42,11 @@ const PostTextarea = styled.textarea`
     padding: 5px 15px;
     border: none;
     resize: none;
+
+    @media (max-width: 1100px) {
+        border-radius: 0 0 25px 25px;
+        border: 1px solid #D9D9D9;
+    }
 `
 
 export default function PostCard() {

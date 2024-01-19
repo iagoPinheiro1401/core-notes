@@ -11,6 +11,10 @@ const StyledSearch = styled.input`
     background-image: url('search.png');
     background-repeat: no-repeat;
     background-position: right 10px center;
+
+    @media (max-width: 750px) {
+        margin-right: 50px;
+    }
 `
 
 export default function Search() {

@@ -15,10 +15,29 @@ const PostContainer = styled.div`
 
 const NotesContainer = styled.div`
   width: 100%;
-  margin: 25px 127px 0 127px;
   gap: 20px;
   display: grid;
   grid-template-columns: repeat(3,1fr);
+  margin-bottom: 50px;
+
+  @media (max-width: 1700px) {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  @media (max-width: 1100px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
+const Text = styled.p`
+  margin: 0 0 20px 20px;
+
+  @media (max-width: 1100px) {
+    text-align: center;
+  }
 `
 
 function HomePage() {
@@ -29,17 +48,17 @@ function HomePage() {
         <PostCard/>
       </PostContainer>
       <Container>
-        <p>Favoritas</p>
+        <Text>Favoritas</Text>
+        <NotesContainer>
+          <NoteCard/>
+          <NoteCard/>
+          <NoteCard/>
+          <NoteCard/>
+          <NoteCard/>
+          <NoteCard/>
+          <NoteCard/>
+        </NotesContainer>
       </Container>
-      <NotesContainer>
-        <NoteCard/>
-        <NoteCard/>
-        <NoteCard/>
-        <NoteCard/>
-        <NoteCard/>
-        <NoteCard/>
-        <NoteCard/>
-      </NotesContainer>
     </>
   )
 }
