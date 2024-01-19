@@ -8,7 +8,6 @@ const StyleCard = styled.div`
     border-radius: 3px;
     border: 1px solid #D9D9D9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 25px;
 `
 
 const InputTitle = styled.input`
