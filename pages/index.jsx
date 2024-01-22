@@ -57,6 +57,19 @@ function HomePage() {
 
     fetchNotes();
   }, [])
+
+  const handleDeleteNote = async (noteId) => {
+    try {
+      await axios.delete(`http://localhost:3333/notes/${noteId}`)
+      setNotes((prevNotes) => prevNotes.filter((note) => note._id !== noteId))
+    } catch (error) {
+      console.error('Erro ao excluir a nota:', error)
+    }
+  };
+
+  const handleEditNote = (noteId) => {
+    setEditingNote(noteId);
+  };
   return (
     <>
       <Navbar/>
