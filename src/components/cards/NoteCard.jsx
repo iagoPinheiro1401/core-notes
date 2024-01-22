@@ -55,7 +55,7 @@ const EditAndColors = styled.div`
     gap: 10px;
 `
 
-export default function NoteCard({ title, note, onDelete }) {
+export default function NoteCard({ title, note, onDelete, onEdit }) {
     return(
         <StyleCard>
             <TitleContainer>
@@ -66,7 +66,7 @@ export default function NoteCard({ title, note, onDelete }) {
             <p>{note}</p>
             <ImgsContainer>
                 <EditAndColors>
-                    <Img src='edit.png'/>
+                    <Img src='edit.png' onClick={onEdit}/>
                     <Img src='color.png'/>
                 </EditAndColors>
                 <Img src='delete.png' onClick={onDelete}/>

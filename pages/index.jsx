@@ -6,6 +6,7 @@ import Navbar from '../src/components/navbar/Navbar'
 import PostCard from '../src/components/cards/PostCard'
 import NoteCard from '../src/components/cards/NoteCard'
 import Container from '../src/components/container/Container'
+import EditNote from '../src/components/editNote/EditNote'
 
 const PostContainer = styled.div`
   display: flex;
@@ -44,18 +45,19 @@ const Text = styled.p`
 
 function HomePage() {
   const [notes, setNotes] = useState([])
+  const [editingNote, setEditingNote] = useState(null)
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
         const response = await axios.get('http://localhost:3333/notes')
-        setNotes(response.data);
+        setNotes(response.data)
       } catch (error) {
-        console.error('Erro ao buscar notas:', error);
+        console.error('Erro ao buscar notas:', error)
       }
-    };
+    }
 
-    fetchNotes();
+    fetchNotes()
   }, [])
 
   const handleDeleteNote = async (noteId) => {
@@ -65,11 +67,28 @@ function HomePage() {
     } catch (error) {
       console.error('Erro ao excluir a nota:', error)
     }
-  };
+  }
 
   const handleEditNote = (noteId) => {
-    setEditingNote(noteId);
-  };
+    setEditingNote(noteId)
+  }
+
+  const handleSaveEdit = async (editedTitle, editedNote) => {
+    try {
+      await axios.put(`http://localhost:3333/notes/${editingNote}`, {
+        title: editedTitle,
+        note: editedNote,
+      })
+
+      const response = await axios.get('http://localhost:3333/notes');
+      setNotes(response.data)
+    } catch (error) {
+      console.error('Erro ao editar a nota:', error)
+    }
+
+    setEditingNote(null)
+  }
+
   return (
     <>
       <Navbar/>
@@ -90,6 +109,14 @@ function HomePage() {
           ))}
         </NotesContainer>
       </Container>
+      {editingNote && (
+        <EditNote
+          onClose={() => setEditingNote(null)}
+          onSave={handleSaveEdit}
+          title={notes.find((note) => note._id === editingNote)?.title}
+          note={notes.find((note) => note._id === editingNote)?.note}
+        />
+      )}
     </>
   )
 }
