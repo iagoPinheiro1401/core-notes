@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import Navbar from '../src/components/navbar/Navbar'
 import PostCard from '../src/components/cards/PostCard'
@@ -41,6 +43,20 @@ const Text = styled.p`
 `
 
 function HomePage() {
+  const [notes, setNotes] = useState([])
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await axios.get('http://localhost:3333/notes')
+        setNotes(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar notas:', error);
+      }
+    };
+
+    fetchNotes();
+  }, [])
   return (
     <>
       <Navbar/>
@@ -50,13 +66,15 @@ function HomePage() {
       <Container>
         <Text>Favoritas</Text>
         <NotesContainer>
-          <NoteCard/>
-          <NoteCard/>
-          <NoteCard/>
-          <NoteCard/>
-          <NoteCard/>
-          <NoteCard/>
-          <NoteCard/>
+          {notes.map((note) => (
+              <NoteCard 
+                key={note._id}
+                title={note.title} 
+                note={note.note} 
+                onDelete={() => handleDeleteNote(note._id)}
+                onEdit={() => handleEditNote(note._id)}
+              />
+          ))}
         </NotesContainer>
       </Container>
     </>
