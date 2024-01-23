@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
 import Navbar from '../src/components/navbar/Navbar'
@@ -46,6 +47,7 @@ const Text = styled.p`
 function HomePage() {
   const [notes, setNotes] = useState([])
   const [editingNote, setEditingNote] = useState(null)
+  const { reset, ...formMethods } = useForm()
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -89,11 +91,26 @@ function HomePage() {
     setEditingNote(null)
   }
 
+  const handlePostSubmit = async (title, note) => {
+    try {
+      const response = await axios.post('http://localhost:3333/notes', {
+        title,
+        note,
+      })
+
+      setNotes((prevNotes) => [...prevNotes, response.data])
+
+      reset()
+    } catch (error) {
+      console.error('Erro ao enviar a nota para o banco de dados:', error)
+    }
+  }
+
   return (
     <>
       <Navbar/>
       <PostContainer>
-        <PostCard/>
+        <PostCard onSubmit={handlePostSubmit}/>
       </PostContainer>
       <Container>
         <Text>Favoritas</Text>
