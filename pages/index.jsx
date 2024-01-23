@@ -107,6 +107,9 @@ function HomePage() {
     }
   }
 
+  const hasFavoriteNotes = notes.some((note) => !note.isFavorite)
+  const hasNonFavoriteNotes = notes.some((note) => note.isFavorite)
+
   return (
     <>
       <Navbar/>
@@ -114,13 +117,34 @@ function HomePage() {
         <PostCard onSubmit={handlePostSubmit}/>
       </PostContainer>
       <Container>
-        <Text>Favoritas</Text>
+        {hasFavoriteNotes && <Text>Favoritas</Text>}
         <NotesContainer>
-          {notes.map((note) => (
+          {notes
+            .filter((note) => note.isFavorite === false)
+            .map((note) => (
               <NoteCard 
                 key={note._id}
                 title={note.title} 
-                note={note.note} 
+                note={note.note}
+                isFavorite={note.isFavorite}
+                onDelete={() => handleDeleteNote(note._id)}
+                onEdit={() => handleEditNote(note._id)}
+              />
+          ))}
+        </NotesContainer>
+      </Container>
+
+      <Container>
+        {hasNonFavoriteNotes && <Text>Outras</Text>}
+        <NotesContainer>
+          {notes
+            .filter((note) => note.isFavorite)
+            .map((note) => (
+              <NoteCard 
+                key={note._id}
+                title={note.title} 
+                note={note.note}
+                isFavorite={note.isFavorite}
                 onDelete={() => handleDeleteNote(note._id)}
                 onEdit={() => handleEditNote(note._id)}
               />
