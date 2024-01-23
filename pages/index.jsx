@@ -91,11 +91,12 @@ function HomePage() {
     setEditingNote(null)
   }
 
-  const handlePostSubmit = async (title, note) => {
+  const handlePostSubmit = async (title, note, isImage) => {
     try {
       const response = await axios.post('http://localhost:3333/notes', {
         title,
         note,
+        isFavorite: isImage
       })
 
       setNotes((prevNotes) => [...prevNotes, response.data])

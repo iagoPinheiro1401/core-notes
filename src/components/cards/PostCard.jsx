@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Line from '../line/Line'
@@ -23,11 +24,7 @@ const StyleCard = styled.div`
 const InputTitle = styled.input`
     width: calc(100% - 30px);
     padding: 5px 15px;
-    background-image: url('vector.png');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
     border: none;
-    cursor: pointer;
 
     &::placeholder {
         font-weight: bolder;
@@ -36,13 +33,13 @@ const InputTitle = styled.input`
 
     @media (max-width: 1100px) {
         border-radius: 25px 25px 0 0;
-        border: 1px solid #D9D9D9;
+        border:  #D9D9D9;
     }
 `
 
 const PostTextarea = styled.textarea`
     width: calc(100% - 30px);
-    height: 60px;
+    height: 64px;
     padding: 5px 15px;
     border: none;
     resize: none;
@@ -53,11 +50,28 @@ const PostTextarea = styled.textarea`
     }
 `
 
+const InputContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const Image = styled.img`
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+
+  @media (max-width: 1100px) {
+    margin-right: 5px;
+  }
+`
+
 export default function PostCard({ onSubmit }) {
     const { register, handleSubmit, reset } = useForm()
+    const [isImage, setIsImage] = useState(true)
 
     const onFormSubmit = (data) => {
-        onSubmit(data.title, data.note)
+        onSubmit(data.title, data.note, isImage)
         reset()
     }
 
@@ -68,13 +82,23 @@ export default function PostCard({ onSubmit }) {
         }
     }
 
+    const handleClickImage = () => {
+      setIsImage(!isImage)
+    }
+
     return (
         <StyleCard>
           <form onSubmit={handleSubmit(onFormSubmit)}>
-            <InputTitle
-              placeholder='Título'
-              {...register('title')}
-            />
+            <InputContainer>
+              <InputTitle
+                placeholder='Título'
+                {...register('title')}
+              />
+              <Image
+                src={isImage ? 'vector.png' : 'vector-yellow.png'}
+                onClick={handleClickImage}
+              />
+            </InputContainer>
             <Line />
             <PostTextarea
               placeholder='Criar nota...'
