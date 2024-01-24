@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { useState } from 'react'
+import axios from 'axios'
 
 import Line from '../line/Line'
 import EditColor from '../editColor/EditColor'
@@ -62,7 +63,7 @@ const ContainerMain = styled.div`
     flex-direction: column;
 `
 
-export default function NoteCard({ title, note, isFavorite, onDelete, onEdit }) {
+export default function NoteCard({ noteId, title, note, isFavorite, onDelete, onEdit, onUpdateColor, color }) {
     const [selectedColor, setSelectedColor] = useState('#FFFFFF')
     const [isEditColor, setIsEditColor] = useState(false)
 
@@ -70,14 +71,21 @@ export default function NoteCard({ title, note, isFavorite, onDelete, onEdit }) 
         setIsEditColor(!isEditColor)
     }
 
-    const handleColorSelect = (color) => {
-        setSelectedColor(color)
+    const handleColorSelect = async (newColor) => {
         handleEditColor()
+        if (color !== newColor) {
+          try {
+            await axios.put(`http://localhost:3333/notes/${noteId}`, { color: newColor });
+            onUpdateColor(noteId, newColor);
+          } catch (error) {
+            console.error('Erro ao atualizar a cor no banco de dados:', error);
+          }
+        }
     }
 
   return (
     <ContainerMain>
-        <StyleCard style={{ backgroundColor: selectedColor }}>
+        <StyleCard style={{ backgroundColor: color }}>
         <TitleContainer>
             <Title>{title}</Title>
             <Img src={isFavorite ? 'vector.png' : 'vector-yellow.png'} />
@@ -87,7 +95,7 @@ export default function NoteCard({ title, note, isFavorite, onDelete, onEdit }) 
         <ImgsContainer>
             <EditAndColors>
             <Img src='edit.png' onClick={onEdit} />
-            <Img src='color.png' onClick={() => handleColorSelect(selectedColor)}/>
+            <Img src='color.png' onClick={() => handleColorSelect(color)}/>
             </EditAndColors>
             <Img src='delete.png' onClick={onDelete} />
         </ImgsContainer>

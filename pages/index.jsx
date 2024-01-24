@@ -96,6 +96,7 @@ function HomePage() {
       const response = await axios.post('http://localhost:3333/notes', {
         title,
         note,
+        color: '#fff',
         isFavorite: isImage
       })
 
@@ -105,6 +106,14 @@ function HomePage() {
     } catch (error) {
       console.error('Erro ao enviar a nota para o banco de dados:', error)
     }
+  }
+
+  const handleUpdateColor = (noteId, newColor) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note._id === noteId ? { ...note, color: newColor } : note
+      )
+    );
   }
 
   const hasFavoriteNotes = notes.some((note) => !note.isFavorite)
@@ -124,11 +133,14 @@ function HomePage() {
             .map((note) => (
               <NoteCard 
                 key={note._id}
-                title={note.title} 
+                noteId={note._id}
+                title={note.title}
                 note={note.note}
                 isFavorite={note.isFavorite}
+                color={note.color}
                 onDelete={() => handleDeleteNote(note._id)}
                 onEdit={() => handleEditNote(note._id)}
+                onUpdateColor={handleUpdateColor}
               />
           ))}
         </NotesContainer>
@@ -142,11 +154,14 @@ function HomePage() {
             .map((note) => (
               <NoteCard 
                 key={note._id}
-                title={note.title} 
+                noteId={note._id}
+                title={note.title}
                 note={note.note}
                 isFavorite={note.isFavorite}
+                color={note.color}
                 onDelete={() => handleDeleteNote(note._id)}
                 onEdit={() => handleEditNote(note._id)}
+                onUpdateColor={handleUpdateColor}
               />
           ))}
         </NotesContainer>
