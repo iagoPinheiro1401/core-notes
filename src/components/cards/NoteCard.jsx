@@ -1,6 +1,8 @@
 import styled from 'styled-components'
+import { useState } from 'react'
 
 import Line from '../line/Line'
+import EditColor from '../editColor/EditColor'
 
 const StyleCard = styled.div`
     width: 390px;
@@ -55,22 +57,42 @@ const EditAndColors = styled.div`
     gap: 10px;
 `
 
+const ContainerMain = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
 export default function NoteCard({ title, note, isFavorite, onDelete, onEdit }) {
-    return(
-        <StyleCard>
-            <TitleContainer>
-                <Title>{title}</Title>
-                <Img src={isFavorite ? 'vector.png' : 'vector-yellow.png'}/>
-            </TitleContainer>
-            <NoteLine/>
-            <p>{note}</p>
-            <ImgsContainer>
-                <EditAndColors>
-                    <Img src='edit.png' onClick={onEdit}/>
-                    <Img src='color.png'/>
-                </EditAndColors>
-                <Img src='delete.png' onClick={onDelete}/>
-            </ImgsContainer>
+    const [selectedColor, setSelectedColor] = useState('#FFFFFF')
+    const [isEditColor, setIsEditColor] = useState(false)
+
+    const handleEditColor = () => {
+        setIsEditColor(!isEditColor)
+    }
+
+    const handleColorSelect = (color) => {
+        setSelectedColor(color)
+        handleEditColor()
+    }
+
+  return (
+    <ContainerMain>
+        <StyleCard style={{ backgroundColor: selectedColor }}>
+        <TitleContainer>
+            <Title>{title}</Title>
+            <Img src={isFavorite ? 'vector.png' : 'vector-yellow.png'} />
+        </TitleContainer>
+        <NoteLine />
+        <p>{note}</p>
+        <ImgsContainer>
+            <EditAndColors>
+            <Img src='edit.png' onClick={onEdit} />
+            <Img src='color.png' onClick={() => handleColorSelect(selectedColor)}/>
+            </EditAndColors>
+            <Img src='delete.png' onClick={onDelete} />
+        </ImgsContainer>
         </StyleCard>
-    )
+        {isEditColor && <EditColor onSelectColor={handleColorSelect}/>}
+    </ContainerMain>
+  )
 }
