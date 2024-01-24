@@ -24,13 +24,13 @@ const TextLogo = styled.p`
     line-height: normal;
 `
 
-export default function Navbar() {
+export default function Navbar({ onSearch }) {
     return(
         <StyledNavbar>
             <ComponentsNavbar>
                 <img src='logo.png'/>
                 <TextLogo>CoreNotes</TextLogo>
-                <Search/>
+                <Search onSearch={onSearch}/>
             </ComponentsNavbar>
         </StyledNavbar>
     )

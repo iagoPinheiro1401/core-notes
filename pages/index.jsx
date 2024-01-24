@@ -47,6 +47,8 @@ const Text = styled.p`
 function HomePage() {
   const [notes, setNotes] = useState([])
   const [editingNote, setEditingNote] = useState(null)
+  const [filteredNotes, setFilteredNotes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { reset, ...formMethods } = useForm()
 
   useEffect(() => {
@@ -116,15 +118,139 @@ function HomePage() {
     );
   }
 
+  const handleSearch = (searchValue) => {
+    setSearchTerm(searchValue);
+
+    // Filtra as notas com base no valor de pesquisa
+    const filtered = notes.filter((note) =>
+      note.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    setFilteredNotes(filtered);
+  };
+
   const hasFavoriteNotes = notes.some((note) => !note.isFavorite)
   const hasNonFavoriteNotes = notes.some((note) => note.isFavorite)
 
   return (
     <>
-      <Navbar/>
+      <Navbar onSearch={handleSearch}/>
       <PostContainer>
         <PostCard onSubmit={handlePostSubmit}/>
       </PostContainer>
+      <Container>
+        {searchTerm && filteredNotes.length === 0 ? (
+          <Text>Nenhuma nota encontrada.</Text>
+        ) : (
+          <>
+            {searchTerm ? (
+              <NotesContainer>
+                {filteredNotes.map((note) => (
+                  <NoteCard
+                    key={note._id}
+                    noteId={note._id}
+                    title={note.title}
+                    note={note.note}
+                    isFavorite={note.isFavorite}
+                    color={note.color}
+                    onDelete={() => handleDeleteNote(note._id)}
+                    onEdit={() => handleEditNote(note._id)}
+                    onUpdateColor={handleUpdateColor}
+                  />
+                ))}
+              </NotesContainer>
+            ) : (
+              <>
+                {hasFavoriteNotes && <Text>Favoritas</Text>}
+                <NotesContainer>
+                  {notes
+                    .filter((note) => note.isFavorite === false)
+                    .map((note) => (
+                      <NoteCard
+                        key={note._id}
+                        noteId={note._id}
+                        title={note.title}
+                        note={note.note}
+                        isFavorite={note.isFavorite}
+                        color={note.color}
+                        onDelete={() => handleDeleteNote(note._id)}
+                        onEdit={() => handleEditNote(note._id)}
+                        onUpdateColor={handleUpdateColor}
+                      />
+                    ))}
+                </NotesContainer>
+
+                {hasNonFavoriteNotes && <Text>outras</Text>}
+                <NotesContainer>
+                  {notes
+                    .filter((note) => note.isFavorite === true)
+                    .map((note) => (
+                      <NoteCard
+                        key={note._id}
+                        noteId={note._id}
+                        title={note.title}
+                        note={note.note}
+                        isFavorite={note.isFavorite}
+                        color={note.color}
+                        onDelete={() => handleDeleteNote(note._id)}
+                        onEdit={() => handleEditNote(note._id)}
+                        onUpdateColor={handleUpdateColor}
+                      />
+                    ))}
+                </NotesContainer>
+              </>
+            )}
+          </>
+        )}
+      </Container>
+      {editingNote && (
+        <EditNote
+          onClose={() => setEditingNote(null)}
+          onSave={handleSaveEdit}
+          title={notes.find((note) => note._id === editingNote)?.title}
+          note={notes.find((note) => note._id === editingNote)?.note}
+        />
+      )}
+    </>
+  )
+}
+
+export default HomePage
+
+/*
+ <Container>
+        {searchTerm && filteredNotes.length === 0 ? (
+          <Text>Nenhuma nota encontrada.</Text>
+        ) : (
+          <NotesContainer>
+            {filteredNotes.length > 0
+              ? filteredNotes.map((note) => (
+                  <NoteCard
+                    key={note._id}
+                    title={note.title}
+                    note={note.note}
+                    isFavorite={note.isFavorite}
+                    onDelete={() => handleDeleteNote(note._id)}
+                    onEdit={() => handleEditNote(note._id)}
+                  />
+                ))
+              : notes.map((note) => (
+                  <NoteCard
+                    key={note._id}
+                    title={note.title}
+                    note={note.note}
+                    isFavorite={note.isFavorite}
+                    onDelete={() => handleDeleteNote(note._id)}
+                    onEdit={() => handleEditNote(note._id)}
+                  />
+                ))}
+          </NotesContainer>
+        )}
+      </Container>
+
+
+
+
       <Container>
         {hasFavoriteNotes && <Text>Favoritas</Text>}
         <NotesContainer>
@@ -166,16 +292,4 @@ function HomePage() {
           ))}
         </NotesContainer>
       </Container>
-      {editingNote && (
-        <EditNote
-          onClose={() => setEditingNote(null)}
-          onSave={handleSaveEdit}
-          title={notes.find((note) => note._id === editingNote)?.title}
-          note={notes.find((note) => note._id === editingNote)?.note}
-        />
-      )}
-    </>
-  )
-}
-
-export default HomePage
+*/
